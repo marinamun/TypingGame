@@ -8,5 +8,8 @@ public class TypingGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
+
+        GameLogic gameLogic = new GameLogic();
+        frame.add(gameLogic);
     }
 }
