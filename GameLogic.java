@@ -18,6 +18,8 @@ public class GameLogic extends JPanel implements KeyListener {
     private String userInput = "";
     private int score = 0;
     private JLabel scoreLabel;
+    private JLabel userInputLabel;
+    private int wordSpawnCounter = 0;
 
     public GameLogic() {
         activeWords = new ArrayList<>();
@@ -35,11 +37,16 @@ public class GameLogic extends JPanel implements KeyListener {
         scoreLabel.setBounds(20,20,200,30);
         this.add(scoreLabel);
 
+        userInputLabel = new JLabel("Typed: ");
+        userInputLabel.setBounds(20, 60, 300, 30); // Adjust position and size
+        this.add(userInputLabel);
+
+
         displayWord();
         displayWord();
 
 
-        timer = new Timer(30, e -> moveWords());
+        timer = new Timer(50, e -> moveWords());
         timer.start();
     }
     private String getRandomWord(){
@@ -53,7 +60,7 @@ public class GameLogic extends JPanel implements KeyListener {
         }
 
         for(int i= 0; i < activeWords.size(); i++){
-            int newX = wordPositions.get(i) -5;
+            int newX = wordPositions.get(i) -2;
             wordPositions.set(i, newX);
 
             JLabel wordLabel = activeWords.get(i);
@@ -64,6 +71,11 @@ public class GameLogic extends JPanel implements KeyListener {
                 gameOver();
                 return;
             }
+            // lets add a new word every 150 timer ticks
+            wordSpawnCounter++;
+            if (wordSpawnCounter % 150 == 0) {
+                displayWord();
+    }
         }
 
         if (activeWords.size() < 3) { //this displays new words on screen
@@ -118,17 +130,22 @@ public void keyTyped(KeyEvent e) {
 
     char typedChar = e.getKeyChar();
     userInput += typedChar;
+    userInputLabel.setText(userInput); // Update label
+
 
     for (int i = 0; i < activeWords.size(); i++) {
         JLabel wordLabel = activeWords.get(i);
 
         if (wordLabel.getText().equals(userInput)) {
+            System.out.println("Word matched: " + userInput);
             this.remove(wordLabel); 
             activeWords.remove(i); 
             wordPositions.remove(i); 
             userInput = ""; 
             score++;
             scoreLabel.setText("Score: " + score); 
+            this.revalidate(); // Ensure panel updates
+            this.repaint(); // Refresh panel
             return; 
         }
     }
