@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.event.KeyEvent;
@@ -7,6 +8,11 @@ import java.awt.event.KeyListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.LineBorder;
+
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 
 public class GameLogic extends JPanel implements KeyListener {
@@ -35,10 +41,17 @@ public class GameLogic extends JPanel implements KeyListener {
 
         scoreLabel = new JLabel("Score: 0");
         scoreLabel.setBounds(20,20,200,30);
+        scoreLabel.setFont(new Font("Monospaced", Font.PLAIN, 24));
+
         this.add(scoreLabel);
 
         userInputLabel = new JLabel("Typed: ");
-        userInputLabel.setBounds(20, 60, 300, 30); // Adjust position and size
+        userInputLabel.setBounds(20, 60, 200, 30); // Adjust position and size
+        userInputLabel.setOpaque(true); // this makes the label background visible
+        userInputLabel.setBackground(Color.WHITE);
+        userInputLabel.setBorder(new LineBorder(Color.decode("#202a45"), 2, true)); 
+         userInputLabel.setForeground(Color.decode("#202a45"));
+        userInputLabel.setFont(new Font("Monospaced", Font.PLAIN, 24));
         this.add(userInputLabel);
 
 
@@ -86,8 +99,9 @@ public class GameLogic extends JPanel implements KeyListener {
     private void displayWord() {
     String randomWord = getRandomWord();
     JLabel wordLabel = new JLabel(randomWord);
-    wordLabel.setFont(wordLabel.getFont().deriveFont(18f)); 
-    wordLabel.setBounds(900, wordY, 200, 30); 
+    wordLabel.setFont(new Font("Monospaced", Font.BOLD, 20));  
+    wordLabel.setBounds(900, wordY, 200, 30);
+    wordLabel.setForeground(Color.decode("#202a45")); 
     activeWords.add(wordLabel); 
     wordPositions.add(900); 
     this.add(wordLabel); 
@@ -104,14 +118,23 @@ public class GameLogic extends JPanel implements KeyListener {
         if (isGameOver) return; 
         isGameOver = true;
         timer.stop();
-        System.out.println("Game overrrrr, final score: " + score);
+        System.out.println("Game over, final score: " + score);
+        
+   
         // display the game over message on screen
-        JLabel gameOverLabel = new JLabel("Game Over! Final Score: " + score);
-        gameOverLabel.setFont(gameOverLabel.getFont().deriveFont(20f));
-        gameOverLabel.setBounds(350, 150, 300, 50);
+        JLabel gameOverLabel = new JLabel("Game over :( final score: " + score );
+        gameOverLabel.setFont(new Font("Courier New", Font.BOLD, 30));
+        gameOverLabel.setBounds(200, 150, 600, 50); ;
         this.add(gameOverLabel);
         this.revalidate();
-        this.repaint();
+        this.repaint(); 
+        
+        // Remove all active words when the gameover message shows
+        for (JLabel wordLabel : activeWords) {
+            this.remove(wordLabel);
+        }
+        activeWords.clear();
+        wordPositions.clear();
     }
 
 
@@ -166,6 +189,25 @@ public void keyTyped(KeyEvent e) {
     @Override
     public void keyReleased(KeyEvent e) {
         // Not used
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); 
+
+        Graphics2D g2d = (Graphics2D) g;
+        int width = getWidth();
+        int height = getHeight();
+
+        Color startColor = Color.decode("#f9d76c");
+        Color endColor = Color.decode("#ffb4bb");
+
+        GradientPaint gradient = new GradientPaint(
+        0, 0, startColor, 
+        width, height, endColor 
+    );
+
+        g2d.setPaint(gradient);
+        g2d.fillRect(0, 0, width, height);
     }
 
 
