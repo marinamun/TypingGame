@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: TypingGame
+    env: docker
+    plan: free
+    buildCommand: javac -d out TypingGame.java && jar cfm TypingGame.jar META-INF/MANIFEST.MF -C out .
+    startCommand: java -jar TypingGame.jar
+    dockerfilePath: Dockerfile
+    region: frankfurt
