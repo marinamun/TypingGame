@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application
-RUN javac -d out TypingGame.java && jar cfm TypingGame.jar META-INF/MANIFEST.MF -C out .
+RUN javac -d out TypingGame.java GameLogic.java && jar cfm TypingGame.jar META-INF/MANIFEST.MF -C out .
 
 # Expose a port if your app uses one
 EXPOSE 8080
