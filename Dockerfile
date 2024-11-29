@@ -2,7 +2,13 @@
 FROM openjdk:17-jdk-alpine
 
 # Install Xvfb and required libraries for AWT
-RUN apk add --no-cache xvfb libxrender libxtst fontconfig ttf-dejavu
+RUN apk add --no-cache \
+    xvfb \
+    libxrender \
+    libxtst \
+    libxi \
+    fontconfig \
+    ttf-dejavu
 
 # Set the working directory in the container
 WORKDIR /app
