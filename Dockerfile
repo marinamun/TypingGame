@@ -1,8 +1,8 @@
 # Use an official OpenJDK runtime as the base image
 FROM openjdk:17-jdk-alpine
 
-# Install Xvfb
-RUN apk add --no-cache xvfb
+# Install Xvfb and required libraries for AWT
+RUN apk add --no-cache xvfb libxrender libxtst fontconfig ttf-dejavu
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,4 +17,4 @@ RUN javac -d out TypingGame.java GameLogic.java && jar cfm TypingGame.jar META-I
 ENV DISPLAY=:99
 
 # Start Xvfb before running the application
-CMD ["sh", "-c", "Xvfb :99 -screen 0 1024x768x16 & java -jar TypingGame.jar"]
+CMD ["sh", "-c", "rm -f /tmp/.X99-lock && Xvfb :99 -screen 0 1024x768x16 & java -jar TypingGame.jar"]
